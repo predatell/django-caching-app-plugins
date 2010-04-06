@@ -1,12 +1,12 @@
 from setuptools import setup, find_packages
- 
+
 setup(
-    name='django-app-plugins',
-    version='0.1.0',
+    name='django-caching-app-plugins',
+    version='0.1.1',
     description='',
-    author='Doug Napoleone',
-    author_email='doug.napoleone@gmail.com',
-    url='http://code.google.com/p/django-app-plugins/',
+    author='Bruce Kroeze',
+    author_email='bruce@ecomsmith.com',
+    url='http://bitbucket.org/bkroeze/django-caching-app-plugins',
     packages=find_packages(),
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -20,4 +20,5 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=['setuptools'],
+    setup_requires=['setuptools_hg'],
 )
