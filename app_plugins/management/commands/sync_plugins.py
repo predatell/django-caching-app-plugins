@@ -115,7 +115,7 @@ def sync_app_plugins(delete_removed=False, verbosity=1):
     for app_label, lib in libraries.iteritems():
         for label in lib.plugins:
             p = instances.pop(label, None)
-            point_label = label[len(lib.app_name):]
+            point_label = label[len(lib.app_name)+1:]
             if p is None:
                 p = Plugin()
                 p.label = label
