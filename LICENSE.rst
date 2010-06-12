@@ -1,4 +1,4 @@
-Django Signals Ahoy Application License
+Django Caching Apps Plugin License
 =======================================
 
 :Authors:
