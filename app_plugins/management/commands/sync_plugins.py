@@ -1,6 +1,6 @@
 """Load up the registered plugins and plugin points.
 
-New model instances will be created for registered poings and plugins.
+New model instances will be created for registered points and plugins.
 Any unregistered plugins for a registered point will have an instance created.
 Any unregistered points for a registered plugin will have an instance created.
 
@@ -147,7 +147,7 @@ def sync_app_plugins(delete_removed=False, verbosity=1):
                                               options.get('ext', '.html'))
             # raise an error if it does not exist...
             template = options.get('template', default)
-            loader.find_template_source(template)
+            loader.find_template(template)
             p.template = template
             p.save()
 
@@ -167,7 +167,7 @@ def sync_app_plugins(delete_removed=False, verbosity=1):
             template = construct_template_path(app, name, ext)
             bFound = True
             try:
-                loader.find_template_source(template)
+                loader.find_template(template)
             except TemplateDoesNotExist:
                 bFound = False
             p = instances.get(label, None)
