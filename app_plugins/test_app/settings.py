@@ -1,12 +1,9 @@
-# Django settings for satchmo project.
-# If you have an existing project, then ensure that you modify local_settings-customize.py
-# and import it from your main settings file. (from local_settings import *)
 import os
 
 DIRNAME = os.path.dirname(__file__)
 
-DJANGO_PROJECT = 'plugintest'
-DJANGO_SETTINGS_MODULE = 'plugintest.settings'
+DJANGO_PROJECT = 'app_plugins.test_app'
+DJANGO_SETTINGS_MODULE = 'app_plugins.test_app.settings'
 
 LOCAL_DEV = True
 DEBUG = True
@@ -18,8 +15,12 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'sqlite3'
-DATABASE_NAME = 'plugintest.db'
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',  # 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'ado_mssql'.
+        'NAME': 'plugintest.db',
+    }
+}
 
 # Local time zone for this installation. All choices can be found here:
 # http://www.postgresql.org/docs/current/static/datetime-keywords.html#DATETIME-TIMEZONE-SET-TABLE
@@ -51,9 +52,9 @@ SECRET_KEY = ''
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.load_template_source',
-    'django.template.loaders.app_directories.load_template_source',
-#     'django.template.loaders.eggs.load_template_source',
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+#     'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -66,19 +67,23 @@ MIDDLEWARE_CLASSES = (
 
 #this is used to add additional config variables to each request
 # NOTE: overridden in local_settings.py
-TEMPLATE_CONTEXT_PROCESSORS = ('django.core.context_processors.auth',)
+TEMPLATE_CONTEXT_PROCESSORS = ('django.contrib.auth.context_processors.auth',)
 
-ROOT_URLCONF = 'plugintest.site.urls'
+ROOT_URLCONF = 'app_plugins.test_app.site.urls'
 
 TEMPLATE_DIRS = (
-    '/opt/webapps/plugintest/templates',
+    os.path.join(DIRNAME, 'templates'),
 )
 
 INSTALLED_APPS = (
     #'debug_toolbar',
     'app_plugins',
-    'plugintest.site',
-    'plugintest.someapp',
+    'app_plugins.test_app.site',
+    'app_plugins.test_app.someapp',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
 )
 
 AUTHENTICATION_BACKENDS = (
