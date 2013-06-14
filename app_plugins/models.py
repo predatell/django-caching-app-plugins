@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
+from django.conf import settings
 from library import get_library
 import re
 import keyedcache
@@ -189,7 +190,7 @@ class Plugin(models.Model):
         super(Plugin, self).save(**kwargs)
 
 class UserPluginPreference(models.Model):
-    user    = models.ForeignKey(User)
+    user    = models.ForeignKey(settings.AUTH_USER_MODEL)
     plugin  = models.ForeignKey(Plugin)
     visible = models.BooleanField(default=True)
     index   = models.IntegerField(default=0)
