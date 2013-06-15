@@ -190,7 +190,7 @@ class Plugin(models.Model):
         super(Plugin, self).save(**kwargs)
 
 class UserPluginPreference(models.Model):
-    user    = models.ForeignKey(settings.AUTH_USER_MODEL)
+    user    = models.ForeignKey(getattr(settings, 'AUTH_USER_MODEL', 'auth.User'))
     plugin  = models.ForeignKey(Plugin)
     visible = models.BooleanField(default=True)
     index   = models.IntegerField(default=0)
