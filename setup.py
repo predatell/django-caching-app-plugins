@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-caching-app-plugins',
-    version='0.1.3',
+    version='0.1.4',
     description='',
     author='Bruce Kroeze',
     author_email='bruce@ecomsmith.com',
