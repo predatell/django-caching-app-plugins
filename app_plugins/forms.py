@@ -16,6 +16,7 @@ def validate_label(value):
 class AdminPluginPointForm(forms.ModelForm):
     class Meta:
         model = PluginPoint
+        exclude = ()
     
     def clean_label(self):
         value = self.cleaned_data["label"]
@@ -24,6 +25,7 @@ class AdminPluginPointForm(forms.ModelForm):
 class AdminPluginForm(forms.ModelForm):
     class Meta:
         model = Plugin
+        exclude = ()
     
     def clean_label(self):
         value = self.cleaned_data["label"]
