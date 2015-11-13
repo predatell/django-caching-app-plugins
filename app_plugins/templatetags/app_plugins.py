@@ -9,7 +9,8 @@ from django.utils.functional import curry
 from django.utils.encoding import smart_str
 from django.template import loader, VariableDoesNotExist, Variable, Node
 from django.template import TemplateDoesNotExist, TemplateSyntaxError
-from django.core.cache.backends.locmem import CacheClass as LocalMemCache
+from django.core.cache.backends.locmem import LocMemCache
+from django.utils import six
 
 TAG_KEYWORD_ARGUMENT_SEPARATOR = '='
 
@@ -24,8 +25,8 @@ APP_PLUGINS_CACHE_PARAMS = getattr(settings, 'APP_PLUGINS_CACHE_PARAMS',
                                      'timeout': 60*60*24*3, # 3 days
                                      })
 
-app_plugin_apps_with_templates = LocalMemCache('localhost',
-                                               APP_PLUGINS_CACHE_PARAMS)
+app_plugin_apps_with_templates = LocMemCache('localhost',
+                                             APP_PLUGINS_CACHE_PARAMS)
 
 # at import cache the app names for indexing
 app_names = []
@@ -129,17 +130,14 @@ def inclusion_kwdtag(register, file_name, context_class=Context,
                     self.vars_to_resolve = map(Variable, vars_to_resolve)
 
                 def render(self, context):
-                    new_context = callback(func, self.vars_to_resolve, context,
-                                           takes_context)
-                    if not getattr(self, 'nodelist', False):
-                        if (not isinstance(file_name, basestring) and
-                            is_iterable(file_name)):
-                            t = loader.select_template(file_name)
+                    new_context = callback(func, self.vars_to_resolve, context, takes_context)
+                    t = context.render_context.get(self)
+                    if t is None:
+                        if not isinstance(file_name, six.string_types) and is_iterable(file_name):
+                            t = context.template.engine.select_template(file_name)
                         else:
-                            t = loader.get_template(file_name)
-                        self.nodelist = t.nodelist
-                    res = self.nodelist.render(context_class(new_context,
-                            autoescape=context.autoescape))
+                            t = context.template.engine.get_template(file_name)
+                    res = t.render(context_class(new_context, autoescape=context.autoescape))                                           
                     context.pop() # local context
                     context.pop() # args
                     context.pop() # callback context (or empty)
