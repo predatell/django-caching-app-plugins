@@ -1,6 +1,8 @@
-from django.core.exceptions import ImproperlyConfigured
 from django.utils.functional import curry
-from django.utils.datastructures import SortedDict
+try:
+    from django.utils.datastructures import SortedDict
+except ImportError:
+    from collections import OrderedDict as SortedDict
 
 libraries = {}
 
