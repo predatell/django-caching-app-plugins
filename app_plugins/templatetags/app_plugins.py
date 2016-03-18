@@ -17,7 +17,6 @@ TAG_KEYWORD_ARGUMENT_SEPARATOR = '='
 ## RED_FLAG: this feels wrong...
 #from app_plugins.models import PluginPoint, Plugin
 #from app_plugins.models import is_valid_label, construct_template_path
-models = get_app('app_plugins')
 models = apps.get_app_config('app_plugins').models_module
 
 APP_PLUGINS_CACHE_PARAMS = getattr(settings, 'APP_PLUGINS_CACHE_PARAMS',
