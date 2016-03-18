@@ -1,7 +1,7 @@
 """plugins template tag root hooks.
 """
 from django.conf import settings
-from django.db.models.loading import get_app
+from django.apps import apps
 from django import template
 from inspect import getargspec
 from django.template.context import Context
@@ -18,6 +18,7 @@ TAG_KEYWORD_ARGUMENT_SEPARATOR = '='
 #from app_plugins.models import PluginPoint, Plugin
 #from app_plugins.models import is_valid_label, construct_template_path
 models = get_app('app_plugins')
+models = apps.get_app_config('app_plugins').models_module
 
 APP_PLUGINS_CACHE_PARAMS = getattr(settings, 'APP_PLUGINS_CACHE_PARAMS',
                                      {'cull_frequency': 4,
