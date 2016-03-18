@@ -150,7 +150,7 @@ class Plugin(models.Model):
 
     class Meta:
         order_with_respect_to = 'point'
-        ordering = ('point', 'index', 'id')
+        #ordering = ('point', 'index', 'id')
 
     def __unicode__(self):
         return u'plugin:' + self.label
@@ -198,7 +198,7 @@ class UserPluginPreference(models.Model):
     class Meta:
         unique_together = ['user', 'plugin']
         order_with_respect_to = 'plugin'
-        ordering = ('plugin', 'user', 'index', 'id')
+        #ordering = ('plugin', 'user', 'index', 'id')
 
     def __unicode__(self):
         return u':'.join(['pluginpref', self.user.username, self.plugin.label])
