@@ -21,20 +21,24 @@ from django.template import loader, TemplateDoesNotExist
 #from models import Plugin, PluginPoint, REMOVED, ENABLED
 #from models import construct_template_path
 
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import BaseCommand
 from optparse import make_option
 
-class Command(NoArgsCommand):
-    option_list = NoArgsCommand.option_list + (
-        make_option('--delete', action='store_true', dest='delete',
-            help='delete the REMOVED Plugin and PluginPoint instances. '),
-    )
+class Command(BaseCommand):
+    #option_list = BaseCommand.option_list + (
+    #    make_option('--delete', action='store_true', dest='delete',
+    #        help='delete the REMOVED Plugin and PluginPoint instances. '),
+    #)
     help = ("Syncs the registered plugin and plugin points with the model "
             "versions.")
 
     requires_model_validation = True
 
-    def handle_noargs(self, **options):
+    def add_arguments(self, parser):
+        parser.add_argument('--delete', action='store_true', dest='delete',
+            default=False, help='Delete poll instead of closing it')
+
+    def handle(self, **options):
         sync_app_plugins(options.get('delete', False))
 
 def sync_app_plugins(delete_removed=False, verbosity=1):

@@ -137,7 +137,7 @@ def inclusion_kwdtag(register, file_name, context_class=Context,
                             t = context.template.engine.select_template(file_name)
                         else:
                             t = context.template.engine.get_template(file_name)
-                    res = t.render(context_class(new_context, autoescape=context.autoescape))                                           
+                    res = t.render(new_context)                                           
                     context.pop() # local context
                     context.pop() # args
                     context.pop() # callback context (or empty)
