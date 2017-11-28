@@ -10,23 +10,23 @@ def _register(lib, store, prefix, options, do_error, call):
     'generic module library registration decorator passthrough'
     if call is None:
         if do_error:
-            raise RuntimeError, "No callable recieved."
+            raise RuntimeError("No callable recieved.")
         return curry(_register, lib, store, prefix, options, True)
     if not callable(call):
-        raise SyntaxError, "must supply callable"
+        raise SyntaxError("must supply callable")
     if not hasattr(call, '__module__'):
-        raise SyntaxError, "callable must have __module__ defined"
+        raise SyntaxError("callable must have __module__ defined")
     if not hasattr(call, '__name__'):
-        raise SyntaxError, "callable must have __name__ defined"
+        raise SyntaxError("callable must have __name__ defined")
     name = call.__name__
     if prefix: name = prefix + '.' + call.__name__
     if name in store:
-        raise RuntimeError, "library already has a call for " + name
+        raise RuntimeError("library already has a call for %s" % name)
     if lib.app_name is None:
         lib.app_name = call.__module__
         libraries[lib.app_name] = lib
     elif lib.app_name != call.__module__:
-        raise RuntimeError, ("library is for module %s, not %s." %
+        raise RuntimeError("library is for module %s, not %s." %
                              (lib.app_name, call.__module__))
     store[name] = call
     call.options = options

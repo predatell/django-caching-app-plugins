@@ -17,6 +17,7 @@ consider having a loader extension API for listing unregistered plugins.
 """
 from django.conf import settings
 from django.template import loader, TemplateDoesNotExist
+import six
 #from library import libraries
 #from models import Plugin, PluginPoint, REMOVED, ENABLED
 #from models import construct_template_path
@@ -85,17 +86,17 @@ def sync_app_plugins(delete_removed=False, verbosity=1):
     instances = dict((p.label, p) for p in PluginPoint.objects.all())
 
     ## section 1 - registered plugin points
-    for app_label, lib in libraries.iteritems():
+    for app_label, lib in six.iteritems(libraries):
         for label in lib.plugin_points:
             pp = instances.pop(label, None)
             if pp is None:
                 if verbosity > 1:
-                    print "Creating registered PluginPoint:", label
+                    print("Creating registered PluginPoint: %s" % label)
                 pp = PluginPoint(label=label)
             pp.registered = True
             if pp.status == REMOVED:
                 if verbosity > 1:
-                    print "Updating registered PluginPoint:", label
+                    print("Updating registered PluginPoint: %s" % label)
                 # re-enable a previously removed plugin point and its plugins
                 pp.status = ENABLED
                 for p in Plugin.objects.filter(point=pp, status=REMOVED):
@@ -105,7 +106,7 @@ def sync_app_plugins(delete_removed=False, verbosity=1):
             # search for unregistered plugins we do not yet know about?
 
     ## section 2 - removed plugin points
-    for pp in instances.itervalues():
+    for pp in six.itervalues(instances):
         if pp.status != REMOVED:
             pp.status = REMOVED
             pp.save()
@@ -116,7 +117,7 @@ def sync_app_plugins(delete_removed=False, verbosity=1):
     instances = dict((p.label, p) for p in Plugin.objects.all())
 
     ## section 3 - registered plugins
-    for app_label, lib in libraries.iteritems():
+    for app_label, lib in six.iteritems(libraries):
         for label in lib.plugins:
             p = instances.pop(label, None)
             point_label = label[len(lib.app_name)+1:]
@@ -124,7 +125,7 @@ def sync_app_plugins(delete_removed=False, verbosity=1):
                 p = Plugin()
                 p.label = label
                 if verbosity > 1:
-                    print "Creating registered Plugin:", label
+                    print("Creating registered Plugin: %s" % label)
                 try:
                     point = PluginPoint.objects.get(label=point_label)
                     p.point = point
@@ -136,7 +137,7 @@ def sync_app_plugins(delete_removed=False, verbosity=1):
                         point.save()
                 except PluginPoint.DoesNotExist:
                     if verbosity > 1:
-                        print "Creating unregistered PluginPoint:", point_label
+                        print("Creating unregistered PluginPoint: %s" % point_label)
                     point = PluginPoint(label=point_label)
                     point.save()
                     p.point = point
@@ -144,7 +145,7 @@ def sync_app_plugins(delete_removed=False, verbosity=1):
             if p.status == REMOVED:
                 # re-enable a previously removed plugin
                 if verbosity > 1:
-                    print "Updating registered Plugin:", p.label
+                    print("Updating registered Plugin: %s" % p.label)
                 p.status = ENABLED
             options = lib.get_plugin_call(point_label).options
             default = construct_template_path(lib.app_name, point_label,
@@ -156,7 +157,7 @@ def sync_app_plugins(delete_removed=False, verbosity=1):
             p.save()
 
     ## section 4 - initial marking of unregistered known plugins
-    for p in instances.itervalues():
+    for p in six.itervalues(instances):
         if p.status != REMOVED:
             p.status = REMOVED
             p.save()
@@ -178,7 +179,7 @@ def sync_app_plugins(delete_removed=False, verbosity=1):
             if p is None:
                 if bFound:
                     if verbosity > 1:
-                        print "Creating unregistered Plugin:", label
+                        print("Creating unregistered Plugin: %s" % label)
                     p = Plugin(point=pp, label=label, template=template)
             else:
                 if p.status == REMOVED and bFound:
@@ -186,7 +187,7 @@ def sync_app_plugins(delete_removed=False, verbosity=1):
                     p.template = template
                     p.registered = False
                     #if verbosity > 1:
-                    #    print "Updating unregistered Plugin:", label
+                    #    print("Updating unregistered Plugin: %s" % label)
                 elif not p.registered and not bFound and p.status != REMOVED:
                     p.status = REMOVED
                 else:
@@ -198,7 +199,7 @@ def sync_app_plugins(delete_removed=False, verbosity=1):
     for pp in PluginPoint.objects.filter(registered=False).exclude(status=REMOVED):
         if not pp.plugin_set.exclude(status=REMOVED).count():
             if verbosity > 1:
-                print "Removing unregistered PluginPoint:", pp.label
+                print("Removing unregistered PluginPoint: %s" % pp.label)
             pp.status = REMOVED
             pp.save()
 
@@ -207,10 +208,10 @@ def sync_app_plugins(delete_removed=False, verbosity=1):
         count = Plugin.objects.filter(status=REMOVED).count()
         if count:
             if verbosity > 1:
-                print "Deleting %d Removed Plugins" % count
+                print("Deleting %d Removed Plugins" % count)
             Plugin.objects.filter(status=REMOVED).delete()
         count = PluginPoints.objects.filter(status=REMOVED).count()
         if count:
             if verbosity > 1:
-                print "Deleting %d Removed PluginPoint" % count
+                print("Deleting %d Removed PluginPoint" % count)
             PluginPoints.objects.filter(status=REMOVED).delete()

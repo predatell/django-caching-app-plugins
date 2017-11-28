@@ -6,6 +6,7 @@ from django.conf import settings
 from library import get_library
 import re
 import keyedcache
+import six
 
 ENABLED = 0
 DISABLED = 1
@@ -23,15 +24,19 @@ def is_valid_label(name):
     return bool(LABEL_RE.match(name))
 
 def construct_template_path(app, name, ext='.html'):
-    if not is_valid_label(name): raise RuntimeError, u"invalid label: " + name
-    if not is_valid_label(app): raise RuntimeError, u"invalid label: " + app
+    if not is_valid_label(name):
+        err_mess = "invalid label: %s" % name
+        raise six.reraise(RuntimeError, err_mess)
+    if not is_valid_label(app):
+        err_mess = "invalid label: %s" % app
+        raise six.reraise(RuntimeError, err_mess)
     return '/'.join([app.split('.')[-1], 'plugins', name.replace('.','/')])+ext
 
 class PluginPointManager(models.Manager):
     def by_label(self, label):
         try:
             point = keyedcache.cache_get('pluginpoint', label)
-        except keyedcache.NotCachedError, nce:
+        except keyedcache.NotCachedError as nce:
             try:
                 point = self.select_related().get(label=label)
             except PluginPoint.DoesNotExist:
@@ -116,7 +121,7 @@ class PluginManager(models.Manager):
     def by_app_name(self, app, name):
         try:
             plugin = keyedcache.cache_get('plugin', app, name)
-        except keyedcache.NotCachedError, nce:
+        except keyedcache.NotCachedError as nce:
             try:
                 plugin = self.get(label=u'.'.join([app, name]))
             except Plugin.DoesNotExist:

@@ -165,7 +165,7 @@ def template_exists(templ):
 def validate_name(name):
     ## red_flag: turn into a string
     if not models.is_valid_label(name):
-        raise TemplateSyntaxError, "invalid plugin point name '%s'." % name
+        raise TemplateSyntaxError("invalid plugin point name '%s'." % name)
 
 @inclusion_kwdtag(register, "app_plugins/app_plugin.html", takes_context=True)
 def app_plugin(context, app, name, plugin=None, user=None, args=None,
