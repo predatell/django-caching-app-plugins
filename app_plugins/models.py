@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.conf import settings
-from library import get_library
+from .library import get_library
 import re
 import keyedcache
 import six
