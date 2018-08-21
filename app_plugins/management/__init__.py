@@ -1,6 +1,6 @@
 import django
 from django.db.models import signals
-from commands.sync_plugins import sync_app_plugins
+from .commands.sync_plugins import sync_app_plugins
 
 def do_sync(*args, **kwdargs):
     sync_app_plugins(verbosity=kwdargs.get("verbosity", 1))
