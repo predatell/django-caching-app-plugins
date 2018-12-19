@@ -1,5 +1,6 @@
 """plugins template tag root hooks.
 """
+import copy
 from django.conf import settings
 from django.apps import apps
 from django import template
@@ -130,7 +131,7 @@ def inclusion_kwdtag(register, file_name, context_class=Context,
                     self.vars_to_resolve = map(Variable, vars_to_resolve)
 
                 def render(self, context):
-                    new_context = callback(func, self.vars_to_resolve, context, takes_context)
+                    new_context = callback(func, copy.deepcopy(self.vars_to_resolve), context, takes_context)
                     t = context.render_context.get(self)
                     if t is None:
                         if not isinstance(file_name, six.string_types) and is_iterable(file_name):
