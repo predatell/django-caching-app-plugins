@@ -135,7 +135,7 @@ class PluginManager(models.Manager):
         return plugin
 
 class Plugin(models.Model):
-    point      = models.ForeignKey(PluginPoint)
+    point      = models.ForeignKey(PluginPoint, on_delete=models.CASCADE)
     label      = models.CharField(max_length=255, unique=True,
                     help_text=_("The label for the plugin point."))
 
@@ -195,8 +195,8 @@ class Plugin(models.Model):
         super(Plugin, self).save(**kwargs)
 
 class UserPluginPreference(models.Model):
-    user    = models.ForeignKey(getattr(settings, 'AUTH_USER_MODEL', 'auth.User'))
-    plugin  = models.ForeignKey(Plugin)
+    user    = models.ForeignKey(getattr(settings, 'AUTH_USER_MODEL', 'auth.User'), on_delete=models.CASCADE)
+    plugin  = models.ForeignKey(Plugin, on_delete=models.CASCADE)
     visible = models.BooleanField(default=True)
     index   = models.IntegerField(default=0)
 
