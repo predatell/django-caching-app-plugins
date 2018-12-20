@@ -43,14 +43,14 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('visible', models.BooleanField(default=True)),
                 ('index', models.IntegerField(default=0)),
-                ('plugin', models.ForeignKey(to='app_plugins.Plugin')),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('plugin', models.ForeignKey(to='app_plugins.Plugin', on_delete=models.CASCADE)),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
         ),
         migrations.AddField(
             model_name='plugin',
             name='point',
-            field=models.ForeignKey(to='app_plugins.PluginPoint'),
+            field=models.ForeignKey(to='app_plugins.PluginPoint', on_delete=models.CASCADE),
         ),
         migrations.AlterUniqueTogether(
             name='userpluginpreference',
