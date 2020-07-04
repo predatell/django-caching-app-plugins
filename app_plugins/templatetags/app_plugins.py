@@ -1,17 +1,19 @@
 """plugins template tag root hooks.
 """
 import copy
+import six
+from functools import partial
+
 from django.conf import settings
 from django.apps import apps
 from django import template
 from inspect import getargspec
 from django.template.context import Context
-from django.utils.functional import curry
 from django.utils.encoding import smart_str
 from django.template import loader, VariableDoesNotExist, Variable, Node
 from django.template import TemplateDoesNotExist, TemplateSyntaxError
 from django.core.cache.backends.locmem import LocMemCache
-from django.utils import six
+
 
 TAG_KEYWORD_ARGUMENT_SEPARATOR = '='
 
@@ -144,7 +146,7 @@ def inclusion_kwdtag(register, file_name, context_class=Context,
                     context.pop() # callback context (or empty)
                     return res
 
-            compile_func = curry(compiler, InclusionKwdNode)
+            compile_func = partial(compiler, InclusionKwdNode)
             compile_func.__doc__ = func.__doc__
             register.tag(getattr(func, "_decorated_function", func).__name__,
                          compile_func)

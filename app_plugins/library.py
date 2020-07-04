@@ -1,4 +1,4 @@
-from django.utils.functional import curry
+from functools import partial
 try:
     from django.utils.datastructures import SortedDict
 except ImportError:
@@ -11,7 +11,7 @@ def _register(lib, store, prefix, options, do_error, call):
     if call is None:
         if do_error:
             raise RuntimeError("No callable recieved.")
-        return curry(_register, lib, store, prefix, options, True)
+        return partial(_register, lib, store, prefix, options, True)
     if not callable(call):
         raise SyntaxError("must supply callable")
     if not hasattr(call, '__module__'):
