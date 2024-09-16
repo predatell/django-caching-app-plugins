@@ -6,8 +6,7 @@ from functools import partial
 
 from django.conf import settings
 from django.apps import apps
-from django import template
-from inspect import getargspec
+from inspect import getfullargspec
 from django.template.context import Context
 from django.utils.encoding import smart_str
 from django.template import loader, VariableDoesNotExist, Variable, Node
@@ -51,7 +50,8 @@ def callback(func, variables, context, takes_context):
         >>> foo(b=2, a=1, d=3)
     """
     name = getattr(func, "_decorated_function", func).__name__
-    params, varargs, varkw, defaults = getargspec(func)
+    result = getfullargspec(func)
+    params, varargs, varkw, defaults, kwonlyargs, kwonlydefaults, annotations = getfullargspec(func)
     if takes_context:
         if params[0] == 'context':
             params.pop(0)
